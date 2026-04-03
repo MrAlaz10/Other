@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Apr  3 02:51:19 2026
+
+@author: anthony
+"""
+
+import random
+
+print("Hello, welcome to binary practice!")
+
+def binary_game():
+    playing = True
+    while playing == True:
+        answer = random.randint(1,10)       #establishes answer
+        random_binary = bin(answer)         #and coverts to binary
+        print(random_binary)                #displays binary
+        user_converted_answer = 0
+        
+        while user_converted_answer != answer:
+            try:    
+                user_converted_answer = int(input())
+                if user_converted_answer != answer:
+                    print("Sorry, that's not correct! Try again: ")
+            except ValueError:
+                print("integers only!")
+        keep_playing = input("Correct! Would you like to keep playing? [y]/[n]: ")
+        if keep_playing != "y" and keep_playing != "n":
+            while keep_playing != "y" and keep_playing != "n":
+                keep_playing = input("Sorry! I didn't get that. Would you like to keep playing? [y]/[n]: ")
+        if keep_playing == "n":
+            print("Thanks for playing!")
+            playing = False
+        else:
+            print("Yay! Lets keep going!")
+
+            
+print(binary_game())
