@@ -1,0 +1,23 @@
+import os
+
+# 1. Added 'r' for raw strings to prevent backslash errors
+folder1_path = r'H:\Movies'
+folder2_path = r'I:\Movies'
+output_file_path = r'F:\same.txt'
+
+# 2. Used set comprehensions { } instead of list comprehensions [ ]
+f1_dirs = {f.name for f in os.scandir(folder1_path) if f.is_dir()}
+f2_dirs = {f.name for f in os.scandir(folder2_path) if f.is_dir()}
+
+# 3. Set intersection instantly finds the common elements
+common_folders = f1_dirs.intersection(f2_dirs)
+
+# 4. Added utf-8 encoding for special characters in movie titles
+with open(output_file_path, 'w', encoding='utf-8') as output_file:
+    # 5. Sorted the output so your text file is in alphabetical order
+    for folder in sorted(common_folders):
+        output_file.write(f"{folder}\n")
+
+print(f"Done! Found {len(common_folders)} matching movie folders.")
+
+# Code optimized by Google's Gemini
