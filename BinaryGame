@@ -12,8 +12,8 @@ print("Hello, welcome to binary practice!")
 
 def binary_game():
     playing = True
-    while playing == True:
-        answer = random.randint(1,10)       #establishes answer
+    while playing:
+        answer = random.randint(1,50)       #establishes answer
         random_binary = bin(answer)         #and coverts to binary
         print(random_binary)                #displays binary
         user_converted_answer = 0
@@ -30,8 +30,7 @@ def binary_game():
             while keep_playing != "y" and keep_playing != "n":
                 keep_playing = input("Sorry! I didn't get that. Would you like to keep playing? [y]/[n]: ")
         if keep_playing == "n":
-            print("Thanks for playing!")
-            playing = False
+            return "Thanks for playing!"
         else:
             print("Yay! Lets keep going!")
 
