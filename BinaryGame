@@ -30,9 +30,9 @@ def binary_game():
             while keep_playing != "y" and keep_playing != "n":
                 keep_playing = input("Sorry! I didn't get that. Would you like to keep playing? [y]/[n]: ")
         if keep_playing == "n":
-            return "Thanks for playing!"
+            playing = False
         else:
             print("Yay! Lets keep going!")
-
+    return "Thanks for playing!"
             
 print(binary_game())
