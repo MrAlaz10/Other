@@ -64,7 +64,7 @@ def main_menu():
         if main_menu_selection == "leaderboards":
             leaderboards = []
             leaderboard_loop = True
-            while leaderboard_loop == True:
+            while leaderboard_loop:
                 which_leaderboard = input("Which leaderboard would you like to view?\n-Easy\n-Medium\n-Hard\n-Back\n").lower()
                 if which_leaderboard == "easy":
                     try:
