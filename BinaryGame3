@@ -7,6 +7,30 @@ Created on Sat Apr  6 21:29:34 2026
 import random
 import time
 
+def leaderboard_open(difficulty_name):
+    leaderboards = []
+    try:
+        with open(f"leaderboards{difficulty_name}.txt", "r") as file:
+            for line in file:
+                line = line.strip()
+                line = line.split(",")
+                saved_name = line[0]
+                saved_score = int(line[1])
+                leaderboards.append([saved_name, saved_score])
+    except FileNotFoundError:
+        print("Error! You must play the game to view the leaderboard.")
+        return
+    leaderboards.sort(key=lambda x: x[1], reverse=True)
+    while True:
+        for record in leaderboards:
+            print(f"Name: {record[0]}, Score: {record[1]}")
+        leaderboards_exit = input("Type 'back' to return to the main menu:\n").lower()
+        if leaderboards_exit == "back":
+            break
+        else:
+            print("Sorry! Please try again")
+            time.sleep(1.5)
+    
 
 def binary_game(difficulty, name):
     playing = True
@@ -32,6 +56,7 @@ def binary_game(difficulty, name):
 
 
 def main_menu():
+    difficulties = ["easy", "medium", "hard"]
     while True:
         main_menu_selection = input(
             "Welcome to Binary Game 2: The Squeekquel! \nPlease type to make a selection: \n-Play\n-Leaderboards\n-Quit\n").lower()
@@ -62,63 +87,19 @@ def main_menu():
                     print("Sorry! Please try again")
                     time.sleep(1.5)
         if main_menu_selection == "leaderboards":
-            leaderboards = []
-            leaderboard_loop = True
-            while leaderboard_loop:
-                which_leaderboard = input(
-                    "Which leaderboard would you like to view?\n-Easy\n-Medium\n-Hard\n-Back\n").lower()
-                if which_leaderboard == "easy":
-                    try:
-                        with open("leaderboardseasy.txt", "r") as file:
-                            for line in file:
-                                line = line.strip()
-                                line = line.split(",")
-                                saved_name = line[0]
-                                saved_score = int(line[1])
-                                leaderboards.append([saved_name, saved_score])
-                        leaderboard_loop = False
-                    except FileNotFoundError:
-                        print("Error! You must play the game to view the leaderboard.")
-
-                elif which_leaderboard == "medium":
-                    try:
-                        with open("leaderboardsmedium.txt", "r") as file:
-                            for line in file:
-                                line = line.strip()
-                                line = line.split(",")
-                                saved_name = line[0]
-                                saved_score = int(line[1])
-                                leaderboards.append([saved_name, saved_score])
-                        leaderboard_loop = False
-                    except FileNotFoundError:
-                        print("Error! You must play the game to view the leaderboard.")
-                elif which_leaderboard == "hard":
-                    try:
-                        with open("leaderboardshard.txt", "r") as file:
-                            for line in file:
-                                line = line.strip()
-                                line = line.split(",")
-                                saved_name = line[0]
-                                saved_score = int(line[1])
-                                leaderboards.append([saved_name, saved_score])
-                        leaderboard_loop = False
-                    except FileNotFoundError:
-                        print("Error! You must play the game to view the leaderboard.")
-                elif which_leaderboard == "back":
-                    break
-                else:
-                    print("Sorry! Please try again")
-                    time.sleep(1.5)
-            leaderboards.sort(key=lambda x: x[1], reverse=True)
             while True:
-                for record in leaderboards:
-                    print(f"Name: {record[0]}, Score: {record[1]}")
-                leaderboards_exit = input("Type 'back' to return to the main menu:\n").lower()
-                if leaderboards_exit == "back":
+                which_leaderboard = input("Which leaderboard would you like to view?\n-Easy\n-Medium\n-Hard\n-Back\n").lower()
+                    
+                if which_leaderboard == "back":
                     break
+                elif which_leaderboard in difficulties :
+                    leaderboard_open(which_leaderboard)
                 else:
                     print("Sorry! Please try again")
                     time.sleep(1.5)
+            
+            
+            
         if main_menu_selection == "quit":
             return "Thanks for playing!"
 
