@@ -6,15 +6,15 @@ import random
 #in order to store memory, we need to use state management.
 current_state = "main_menu"  #this variable creates a flag that keeps track of exactly what screen we are on
 user_name = ""               #we need to be able to store the players name outside the function too
-difficulty = {"easy" : 10,"medium" : 50,"hard" : 100}
+difficulty = {"easy" : 10,"medium" : 25,"hard" : 75}
 difficulty_name = ""
 difficulty_number = 0
 current_answer = 0
 current_score = 0
 lives = 3
 current_time = 0
-time_limits = {"easy":10,"medium":15,"hard":20}
-timer_job = 0
+time_limits = {"easy":10,"medium":25,"hard":50}
+timer_job = None
 
 def process_command(event):
     global current_state,difficulty_number\
@@ -37,7 +37,7 @@ def process_command(event):
             terminal_screen.insert(tk.END,f"\n\n\n\nPlease type a difficulty or 'back' to go back:\n---Easy---\n---Medium---\n---Hard---\n---Back---\n","center_text")
             current_state = "get_leaderboards"
         elif user_input == "quit":
-            root.quit()                                          #quit command!
+            root.destroy()                                          #quit command!
         elif user_input == "tutorial":
             terminal_screen.configure(state="normal")
             terminal_screen.delete("1.0", tk.END)
@@ -91,15 +91,18 @@ def process_command(event):
         try:
             user_input_int = int(user_input)
             if user_input_int == current_answer:
+                root.after_cancel(timer_job)
                 current_score += 1
                 terminal_screen.configure(state="normal")
                 terminal_screen.insert(tk.END, f"\n\n\nCorrect!", "center_text")
                 terminal_screen.configure(state="disabled")
                 root.after(500,generate_next_question)    #root.after uses milliseconds to wait then executes the function in the second arg.
                 current_time = time_limits[difficulty_name]
+                root.after(500,start_timer)
                 # no () needed unless you need to pass in parameters
             else:
                 lives -= 1
+                root.after_cancel(timer_job)
                 if lives == 0:
                     game_over()
                 else:
@@ -110,6 +113,7 @@ def process_command(event):
                     terminal_screen.configure(state="disabled")
                     root.after(1500,generate_next_question)
                     current_time = time_limits[difficulty_name]
+                    root.after(1500,start_timer)
         except ValueError:
             terminal_screen.configure(state="normal")
             terminal_screen.insert(tk.END, f"Integers only!\n")
@@ -120,8 +124,9 @@ def process_command(event):
         terminal_screen.configure(state="normal")
         terminal_screen.delete("1.0", tk.END)
 
-        difficulty_name = user_input
+
         if user_input in difficulty:
+            difficulty_name = user_input
             try:
                 with open(f"leaderboards{difficulty_name}.txt", "r") as file:
                     for line in file:
@@ -159,6 +164,7 @@ def process_command(event):
 
 def game_over():
     global current_state,difficulty_name,user_name,current_score
+    root.after_cancel(timer_job)
     terminal_screen.configure(state="normal")
     terminal_screen.delete("1.0", tk.END)
     terminal_screen.insert(tk.END, f"\n\n\n\nGame Over! Score: {current_score}\n", "center_text")
@@ -197,6 +203,7 @@ def start_timer():
         lives -= 1
         if lives == 0:
             game_over()
+            return # <--- ADD THIS! It stops the rest of the code from running!
         terminal_screen.configure(state="normal")
         terminal_screen.delete("1.0", tk.END)
         terminal_screen.insert(tk.END,f"\n\n\nTimes up!\n -1 life!\n", "center_text")
