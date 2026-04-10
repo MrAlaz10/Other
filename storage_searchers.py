@@ -14,7 +14,7 @@ tutorial_completed = True
 current_state = ""
 purchased_units = []
 #---------LOOT--------------
-junk = ["vase","family scrapbook","old clothes","useless documents","sports equipment", "tools"]
+junk = ["broken vase","family scrapbook","old clothes","useless documents"," damaged sports equipment", "rusty tools"]
 box_items_common = [
     "small battery", "cables","power supply","small speaker",
     "circuit board", "large speaker", "medium battery", "computer fan"]
