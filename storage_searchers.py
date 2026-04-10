@@ -15,6 +15,8 @@ money = 1500
 current_state = "main menu"
 unit_prices = [150,300,500,600,800,1000]
 unit_price_multiplier = [2,3,4]
+box_colors = {1 : "burlywood", 2 : "peru", 3 : "tan", 4 : "saddlebrown"}
+
 
 def write(screen,text,newline=True,tag=None):
     screen.configure(state="normal")
@@ -72,6 +74,21 @@ def intro_screen():
     continue_button.place(relx=0.5,rely=0.9,anchor="center",width=150,height=50)
     write(background_screen, f"\n\n\n\nWelcome to Storage Searchers, you've just lost \nyour job and taken everything out of your bank \naccount in order to fulfill a lifelong \ndream. Become rich. Buy a storage unit and pray \nto your god there's something valuable in it.", True, "center")
 
+def tutorial_unit():
+    global box_colors
+    background_screen.config(state="normal")
+    background_screen.delete("1.0", tk.END)
+    background_screen.config(bg="dimgray")
+    continue_button.place_forget()
+    for button in range(1,7):
+        random_location_x = random.uniform(0.2,0.9)
+        random_location_y = random.uniform(0.2,0.9)
+        random_height = random.randint(1,6)
+        random_width = random.randint(1,6)
+        box_color_picker = random.randint(1, 4)
+        box_button = tk.Button(root,text="Open",bg=box_colors[box_color_picker],fg="white",font=("Fixedsys", 14),width=random_width,height=random_height)
+        box_button.place(relx=random_location_x,rely=random_location_y)
+
 def quit_game():
     root.destroy()
 
@@ -98,7 +115,7 @@ hud = tk.Label(root,bg="gray",fg="white",text=f"${money}",font=("Fixedsys",16))
 play_button = tk.Button(root, text="Play", command=intro_screen,background="white",foreground="black")
 quit_button = tk.Button(root, text="Quit", command=quit_game,background="white",foreground="black")
 settings_button = tk.Button(root, text="Settings", command=settings,background="white",foreground="black")
-continue_button = tk.Button(root, text="Continue", command=play_game,background="white",foreground="black")
+continue_button = tk.Button(root, text="Continue", command=tutorial_unit,background="white",foreground="black")
 
 
 play_button.place(relx=0.5,rely=0.5,anchor="center", width=150,height=50)
