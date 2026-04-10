@@ -4,7 +4,7 @@ import random
 #------SAVED DATA-------
 inventory = {}
 filament = 100      #measured in grams
-money = 100
+money = 500
 items_crafted = 0
 items_sold = 0
 storage_units_opened = 0
@@ -174,10 +174,11 @@ def open_box(button):
         write(background_screen, f"\n{item}", True, "center")
     if boxes_opened == 6:
         continue_button.config(command=play_game)
-        continue_button.place(relx=0.3,rely=0.9,anchor="center",width=150,height=50)
+        continue_button.place(relx=0.1,rely=0.9,width=150,height=50)
 
 def show_inventory():
     global boxes_opened, active_boxes
+    continue_button.place_forget()
     if current_state != "main lot":
         for box in active_boxes:
             box.place_forget()
@@ -198,6 +199,9 @@ def return_from_inventory():
         hud.place(rely=0.95, relx=0.5, anchor="center")
         inventory_back_button.place_forget()
         inventory_button.place(relx=0.7,rely=0.9,width=150,height=50)
+        if boxes_opened == 6:
+            continue_button.config(command=play_game)
+            continue_button.place(relx=0.1, rely=0.9, width=150, height=50)
         write(background_screen, "\nGrandpa's Storage", True, "center")
     elif current_state == "main lot":
         background_screen.configure(state="normal")
