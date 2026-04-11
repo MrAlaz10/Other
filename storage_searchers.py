@@ -62,6 +62,7 @@ valuables_price = {
 }
 filament_cost = {"desktop computer":500,"bluetooth speaker":150,"bluetooth headphones":50,"laptop":350}
 #--------------OTHER-----------------
+temp_boxes_opened = 0
 active_boxes = {}
 unit_prices = [150,300,500,600,800,1000]
 unit_price_multiplier = [2.0,2.50,3]
@@ -78,11 +79,41 @@ def write(screen,text,newline=True,tag=None):
 
 def buy_unit(index,price,clicked_button):
     global money
-    money -= price
-    hud.config(text=f"${money}")
-    clicked_button.config(state="disabled", text=f"Unit #{index+1}\nPURCHASED")
+    if money >= price:
+        money -= price
+        hud.config(text=f"${money}")
+        clicked_button.config(state="disabled",command=open_unit(), text=f"Unit #{index+1}\nPURCHASED")
+        purchased_units.append(f"Unit{index+1}")
+    else:
+        error_label.place(rely=0.5,relx=0.5,anchor="center")
+        error_label.lift()
+        root.after(2000,error_message_remove)
+        
+def error_message_remove():
+    error_label.place_forget()
+    
+def open_shop():
+    pass
 
 
+def open_unit():
+    global boxes_opened, current_state, temp_boxes_opened
+    temp_boxes_opened = 0
+    box_amount = random.randint(5,8)
+    current_state = "opened_unit"
+    background_screen.config(state="normal")
+    unit_frame.place_forget()
+    
+    background_screen.delete("1.0", tk.END)
+    background_screen.config(bg="dimgray")
+    hud.place(rely=0.95, relx=0.5, anchor="center")
+    hud.lift()
+    spawn_boxes(box_amount)
+    if temp_boxes_opened == box_amount:
+        continue_button.config(command=play_game)
+        continue_button.place(relx=0.1,rely=0.9,width=150,height=50)
+    
+    
 def play_game():
     global current_state
     current_state = "main lot"
@@ -152,7 +183,8 @@ def generate_loot(amount_to_roll):
     return rolled_items
 
 def open_box(button):
-    global boxes_opened, filament, old_3d_printer, active_boxes
+    global boxes_opened, filament, old_3d_printer, active_boxes, temp_boxes_opened
+    temp_boxes_opened += 1
     boxes_opened += 1
     button.place_forget()
     del active_boxes[button]
@@ -175,6 +207,7 @@ def open_box(button):
     if boxes_opened == 6:
         continue_button.config(command=play_game)
         continue_button.place(relx=0.1,rely=0.9,width=150,height=50)
+        active_boxes = {}
 
 def show_inventory():
     global boxes_opened, active_boxes
@@ -208,9 +241,17 @@ def return_from_inventory():
         background_screen.configure(background="gray")
         background_screen.delete("1.0", tk.END)
         continue_button.place_forget()
+        inventory_back_button.place_forget()
         unit_frame.place(relx=0.5, rely=0.5, anchor="center")
         inventory_button.place(relx=0.7, rely=0.9, width=150, height=50)
         write(background_screen, f"\n\n\nStorage Lot", True, "center")
+    elif current_state == "open unit":
+        background_screen.config(state="normal")
+        background_screen.delete("1.0", tk.END)
+        background_screen.config(bg="dimgray")
+        ############################hud.place(rely=0.95, relx=0.5, anchor="center")
+        inventory_back_button.place_forget()
+        inventory_button.place(relx=0.7,rely=0.9,width=150,height=50)
     for box in active_boxes:
         box.place(relx=active_boxes[box][0], rely=active_boxes[box][1])
 
@@ -255,8 +296,8 @@ background_screen.pack(side="top", fill="x",expand=True)
 write(background_screen, "\n\n\n\n Storage Searchers", True, "center")
 
 hud = tk.Label(root,bg="gray",fg="white",text=f"${money}",font=("Fixedsys",16))
-
 inventory_label = tk.Label(root,bg="black",fg="white",font=("Fixedsys",16))
+error_label = tk.Label(root,bg="black",fg="red",text="ERROR",font=("Fixedsys",20))
 
 play_button = tk.Button(root, text="Play", command=intro_screen,background="white",foreground="black")
 quit_button = tk.Button(root, text="Quit", command=quit_game,background="white",foreground="black")
